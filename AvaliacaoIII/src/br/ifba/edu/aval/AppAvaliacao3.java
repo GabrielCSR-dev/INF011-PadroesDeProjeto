@@ -1,0 +1,111 @@
+package br.ifba.edu.aval;
+
+import java.time.Duration;
+
+import br.ifba.edu.aval.exception.AtividadeNaoPermitidaException;
+import br.ifba.edu.aval.exception.DNFException;
+import br.ifba.edu.aval.model.BoletimProva;
+import br.ifba.edu.aval3.chainOfResponsability.Apurador;
+import br.ifba.edu.aval3.chainOfResponsability.DefinirPenalizacao;
+import br.ifba.edu.aval3.chainOfResponsability.DefinirTempoProva;
+import br.ifba.edu.aval3.chainOfResponsability.VerificarPrismasEmOrdem;
+import br.ifba.edu.aval3.chainOfResponsability.VerificarRegistroDePrismas;
+import br.ifba.edu.aval3.chainOfResponsability.VerificarTempoMaximo;
+
+
+public class AppAvaliacao3 extends AppAvaliacaoBase{
+	
+	private Apurador apurador;
+	private DefinirPenalizacao penalizacao;
+	
+	public AppAvaliacao3() {
+		this.penalizacao = new DefinirPenalizacao(null);
+		this.apurador = new VerificarRegistroDePrismas(this.penalizacao);
+		this.apurador = new VerificarPrismasEmOrdem(this.apurador);
+		this.apurador = new VerificarTempoMaximo(this.apurador,Duration.ofMinutes(120));
+		this.apurador = new DefinirTempoProva(this.apurador);
+	}
+	
+	public void aval() {
+		System.out.println("* AVALIAÇÃO III **************************");
+		this.questao1();
+		System.out.println("******************************************");
+		this.questao2();
+	}
+
+	public void questao1() {
+		System.out.println("QUESTÃO 1");
+		this.makeBoletinsProva();
+		try {
+			this.runAtleta4Aval3();
+			this.apurarBoletimProva(this.atleta4);
+		} catch (AtividadeNaoPermitidaException e) {
+			System.err.println("Atividade não permitida na corrida do " + atleta4.cboNumero() + e.getMessage());
+		}		
+	}
+	
+	public void questao2() {
+		System.out.println("QUESTÃO 2");
+		this.makeBoletinsProva();
+		System.out.println("**Corrida do Atleta1**");
+		try {
+			this.runAtleta1Aval1();
+			this.apurarBoletimProva(this.atleta1);
+		} catch (AtividadeNaoPermitidaException e) {
+			System.err.println("Atividade não permitida na corrida do " + atleta1.cboNumero() + ": " + e.getMessage());
+		}
+		System.out.println("**Corrida do Atleta2**");
+		try {
+			this.runAtleta2Aval1();
+			this.apurarBoletimProva(this.atleta2);
+		} catch (AtividadeNaoPermitidaException e) {
+			System.err.println("Atividade não permitida na corrida do " + atleta2.cboNumero() + ": " + e.getMessage());
+		}
+		System.out.println("**Corrida do Atleta3**");
+		try {
+			this.runAtleta3Aval3();
+			this.apurarBoletimProva(this.atleta3);
+		} catch (AtividadeNaoPermitidaException e) {
+			System.err.println("Atividade não permitida na corrida do " + atleta3.cboNumero() + ": " + e.getMessage());
+		}
+		System.out.println("******************************************");
+		System.out.println("**Corrida do Atleta4**");
+		try {
+			this.runAtleta4Aval3();
+			this.apurarBoletimProva(this.atleta4);
+		} catch (AtividadeNaoPermitidaException e) {
+			System.err.println("Atividade não permitida na corrida do " + atleta4.cboNumero() + ": " + e.getMessage());
+		}
+		System.out.println("******************************************");
+
+		System.out.println("**Corrida do Atleta5**");
+		try {
+			this.runAtleta5Aval3();
+			this.apurarBoletimProva(this.atleta5);
+		} catch (AtividadeNaoPermitidaException e) {
+			System.err.println("Atividade não permitida na corrida do " + atleta5.cboNumero() + ": " + e.getMessage());
+		}
+		System.out.println("******************************************");
+		
+	}
+	
+	
+	public void apurarBoletimProva(BoletimProva boletimProva) {
+		System.out.println("*Apurando Atleta (" + boletimProva.cboNumero() + ") ********");
+		try {
+			this.apurador.apurar(boletimProva);
+			System.out.println(this.penalizacao.getTempoProva());
+		} catch (DNFException e) {
+			System.err.println(boletimProva.cboNumero() + " não concluiu - " + e.getMessage());
+		} catch (AtividadeNaoPermitidaException e) {
+			System.err.println("Atividade não permitida na corrida do " + boletimProva.cboNumero() + ". Não é permitido apurar: " + e.getMessage());
+		}			
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		new AppAvaliacao3().aval();
+	}
+
+}
