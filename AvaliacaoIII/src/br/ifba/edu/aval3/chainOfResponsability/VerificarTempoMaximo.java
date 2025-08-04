@@ -19,13 +19,13 @@ public class VerificarTempoMaximo extends ApuradorBase{
 		super.setProximo(regra);
 	}
 
-	public void apurar(BoletimProva boletim)
+	public Duration apurar(BoletimProva boletim)
 			throws DNFException, AtividadeNaoPermitidaException {
 		Duration tempoProva = boletim.getTempo(Prisma.CHEGADA);
 		if(tempoProva.compareTo(this.tempoMaximo)>0)
 			throw new DNFException("O atleta finalizou a prova, após o tempo limite");
 
-		super.apurar(boletim);
+		return super.apurar(boletim);
 	}
 	
 }

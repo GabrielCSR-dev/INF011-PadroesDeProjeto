@@ -16,11 +16,10 @@ import br.ifba.edu.aval3.chainOfResponsability.VerificarTempoMaximo;
 public class AppAvaliacao3 extends AppAvaliacaoBase{
 	
 	private Apurador apurador;
-	private DefinirPenalizacao penalizacao;
 	
 	public AppAvaliacao3() {
-		this.penalizacao = new DefinirPenalizacao(null);
-		this.apurador = new VerificarRegistroDePrismas(this.penalizacao);
+		this.apurador = new DefinirPenalizacao(null);
+		this.apurador = new VerificarRegistroDePrismas(this.apurador);
 		this.apurador = new VerificarPrismasEmOrdem(this.apurador);
 		this.apurador = new VerificarTempoMaximo(this.apurador,Duration.ofMinutes(120));
 		this.apurador = new DefinirTempoProva(this.apurador);
@@ -93,8 +92,7 @@ public class AppAvaliacao3 extends AppAvaliacaoBase{
 	public void apurarBoletimProva(BoletimProva boletimProva) {
 		System.out.println("*Apurando Atleta (" + boletimProva.cboNumero() + ") ********");
 		try {
-			this.apurador.apurar(boletimProva);
-			System.out.println(this.penalizacao.getTempoProva());
+			System.out.println(apurador.apurar(boletimProva));
 		} catch (DNFException e) {
 			System.err.println(boletimProva.cboNumero() + " não concluiu - " + e.getMessage());
 		} catch (AtividadeNaoPermitidaException e) {

@@ -16,14 +16,14 @@ public class DefinirTempoProva extends ApuradorBase{
 		super.setProximo(regra);
 	}
 
-	public void apurar(BoletimProva boletim)
+	public Duration apurar(BoletimProva boletim)
 			throws DNFException, AtividadeNaoPermitidaException {
 		
 		Duration tempoProva = boletim.getTempo(Prisma.CHEGADA);
     	if(tempoProva == null)
     		throw new DNFException("Atleta não registrou chegada");
 
-    	super.apurar(boletim);
+    	return super.apurar(boletim);
 	}
 	
 }

@@ -17,7 +17,7 @@ public class VerificarPrismasEmOrdem extends ApuradorBase{
 		super.setProximo(regra);
 	}
 
-	public void apurar(BoletimProva boletim)
+	public Duration apurar(BoletimProva boletim)
 			throws DNFException, AtividadeNaoPermitidaException {
 		List<Integer> ordemPrismas = boletim.getOrdemPrismas();
 		
@@ -29,7 +29,7 @@ public class VerificarPrismasEmOrdem extends ApuradorBase{
     				throw new DNFException("Atleta registrou prisma fora da ordem");
     	}
 		
-		super.apurar(boletim);
+		return super.apurar(boletim);
 	}
 	
 }

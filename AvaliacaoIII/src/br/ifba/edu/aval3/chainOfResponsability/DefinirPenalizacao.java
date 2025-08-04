@@ -21,17 +21,18 @@ public class DefinirPenalizacao extends ApuradorBase{
 		super.setProximo(regra);
 	}
 
-	public void apurar(BoletimProva boletim)
+	public Duration apurar(BoletimProva boletim)
 			throws DNFException, AtividadeNaoPermitidaException {
 		this.tempoProva = boletim.getTempo(Prisma.CHEGADA);
 		if(this.tempoProva == null)
 			throw new DNFException("Atleta não registrou chegada");
 
-		this.tempoProva = this.tempoProva.plus(Duration.ofMinutes(boletim.getMinutosAtraso()));
-		super.apurar(boletim);
+		if(this.proxRegra == null)
+			return this.getTempo(boletim);
+		return super.apurar(boletim);
 	}
 	
-	public Duration getTempoProva() {
-		return this.tempoProva;
+	public Duration getTempo(BoletimProva boletim) throws AtividadeNaoPermitidaException {
+		return this.tempoProva.plus(Duration.ofMinutes(boletim.getMinutosAtraso()));
 	}
 }
